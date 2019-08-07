@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dubboProvider.dao.UserDao">
+    <select id="findUser" resultType="com.example.domain.User">
+    select * from user where id = #{id}
+    </select>
+    <select id="getUser" resultType="com.example.domain.User">
+        select * from user where userName = #{userName};
+    </select>
+    <select id="selectUser" resultType="com.example.domain.User">
+        select * from user where userName = #{userName} and passWord = #{passWord};
+    </select>
+    <insert id="addUser">
+    insert into user(userName,passWord)values(#{userName},#{passWord});
+</insert>
+</mapper>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>华纳国际影城</title>
+
+    <!-- Bootstrap -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+    <style>
+        /* Make the image fully responsive */
+        .carousel-inner img {
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            position: relative;
+        }
+        span{font-size:18px}
+        .row {
+            padding-bottom: 30px;
+
+        }
+    </style>
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="../static/js/jquery-3.2.1.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/iconfont.js"></script>
+    <script src="../static/js/moment-with-locales.js"></script>
+
+    <script src="../static/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../static/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+    <script type="text/javascript">
+        $(function(){
+            var date = new Date();
+            function show(date){
+                var year=date.getFullYear();
+                var mon=date.getMonth()+1;
+                var day=date.getDate();
+                mon=parseInt(mon)<10?"0"+mon:mon;
+                day=parseInt(day)<10?"0"+day:day;
+                return year+"-"+mon+"-"+day;
+
+            }
+            $("#date1").prepend(show(date));
+            $('#datetimepicker1').datetimepicker({
+                language:'zh-CN', //语言
+                minView: "month",  //最精确的时间选择视图。
+                format: 'yyyy-mm-dd',  //日期格式
+                todayHighlight:true, //高亮当前日期
+                autoclose:true,//选择后自动关闭
+                startDate: date//该日期之前的都不能选择
+            }).on('changeDate', function(ev){
+                $("#date1").empty();
+                var date=$("#datetimepicker1").find("input").val();
+                $("#date1").prepend(date);//将选择的日期显示到副标题上
+                $.ajax({  //发送ajax请求
+                    url:"getmovie" , // 请求路径
+                    type:"get" , //请求方式
+                    contentType : 'application/json',
+                    data:{"date":date},
+                    success:function (data1) {
+                        var con="";
+                       if ($.isEmptyObject(data1)){
+                       con+="<tr><td><h1>抱歉，尚未排片</h1></td><td></td><td></td><td></td></tr>"
+                       }else{
+                           $.each(data1,function(i,data){
+                               con+="<tr><td>"+data.movie+"</td><td>"+data.time+"</td><td>"+data.priceNormal+"</td>" +
+                                   "<td>"+data.priceVip+"</td></tr>"
+                           });
+                       }
+                        $("#movietable").html(con);
+                    },
+                    error:function () {
+                        alert("出错啦...");
+                    }
+                });
+                /*待施工 实现选择日期后与后端交互
+                实时改变电影排片情况*/
+            });
+//            $(document).ready(function (){
+//                alert(show(date));
+//            });
+        });
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <!-- 定义汉堡按钮 -->
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">首页</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="#1">近期热片</a></li>
+                <li><a href="#2">近期影讯</a></li>
+                <li><a href="#3">了解我们</a></li>
+                <!--<li class="dropdown">-->
+                <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">了解我们 <span class="caret"></span></a>-->
+                <!--<ul class="dropdown-menu">-->
+                <!--<li><a href="#">电影票价</a></li>-->
+                <!--<li><a href="#">影院信息</a></li>-->
+                <!--<li><a href="#">同行对比</a></li>-->
+                <!--&lt;!&ndash;<li role="separator" class="divider"></li>&ndash;&gt;-->
+                <!--&lt;!&ndash;<li><a href="#">Separated link</a></li>&ndash;&gt;-->
+                <!--&lt;!&ndash;<li role="separator" class="divider"></li>&ndash;&gt;-->
+                <!--&lt;!&ndash;<li><a href="#">One more separated link</a></li>&ndash;&gt;-->
+                <!--</ul>-->
+                <!--</li>-->
+            </ul>
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="查询影讯">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+                <!--//待施工，接入豆瓣api实时查询电影信息-->
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">问题反馈</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false">账号管理 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/login">登录</a></li>
+                        <li><a href="/register">注册</a></li>
+                        <li><a href="#">成为会员</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div class="row" id="1">
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+            <div class="item active">
+                <img src="../static/img/szw.jpg" alt="...">
+            </div>
+            <div class="item">
+                <img src="../static/img/wjzdy.jpg" alt="...">
+            </div>
+            <div class="item">
+                <img src="../static/img/haiwang.jpg" alt="...">
+            </div>
+
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</div>
+<div class="container" id="2">
+    <div class="page-header">
+        <h1>近期影讯 <small id="date1"></small></h1>
+    </div>
+    <div class="col-md-12" >
+        <div class='col-sm-6'>
+            <div class="form-group">
+                <label id="starttime" for="datetimepicker1">选择日期：</label>
+                <!--指定 date标记-->
+                <div class='input-group date' id='datetimepicker1' >
+                    <input type='text' class="form-control" name="date2" readonly />
+                    <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped" >
+            <thead>
+            <tr>
+                <th>电影</th>
+                <th>上映时间</th>
+                <th>普通票价</th>
+                <th>会员票价</th>
+            </tr>
+            </thead>
+            <tbody id="movietable">
+
+            <tr>
+                <td>烈火英雄</td>
+                <td>14:50</td>
+                <td>45¥</td>
+                <td>15¥</td>
+            </tr>
+            <tr>
+                <td>千与千寻</td>
+                <td>15:10</td>
+                <td>45¥</td>
+                <td>15¥</td>
+
+            </tr>
+            <tr>
+                <td>红海行动（八一特映）</td>
+                <td>15:30</td>
+                <td>45¥</td>
+                <td>15¥</td>
+
+            </tr>
+            <tr>
+                <td>为家而战</td>
+                <td>16:10</td>
+                <td>45¥</td>
+                <td>15¥</td>
+
+            </tr>
+            <tr>
+                <td>银河补习班</td>
+                <td>16:40</td>
+                <td>45¥</td>
+                <td>15¥</td>
+
+            </tr>
+            <tr>
+                <td>你咪理，我爱你！</td>
+                <td>17:00</td>
+                <td>45¥</td>
+                <td>15¥</td>
+
+            </tr>
+            <tr>
+                <td>隧道尽头</td>
+                <td>19:20</td>
+                <td>45¥</td>
+                <td>15¥</td>
+
+            </tr>
+            <tr>
+                <td>哪吒之魔童降世</td>
+                <td>19:30</td>
+                <td>45¥</td>
+                <td>15¥</td>
+
+            </tr>
+            <tr>
+                <td>战狼2（八一特映）</td>
+                <td>19:40</td>
+                <td>45¥</td>
+                <td>15¥</td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="container" id="3">
+    <div class="col-md-4 col-md-push-8" >
+        <div class="page-header">
+            <h2>平舆县华纳国际影城 </h2>
+            <h2><small>享受电影 品味人生 光影世界 铸造永恒</small></h2>
+        </div>
+
+        <div class="row ">
+            <img src="../static/img/address.png" width="40" height="40">
+            <span>平舆县法桐路</span>
+        </div>
+        <div class="row ">
+            <img src="../static/img/tel.png" width="40" height="40">
+            <span>123456789</span>
+        </div>
+        <div class="row ">
+            <img src="../static/img/wechat.png" width="40" height="40">
+            <span>pingyuhuana</span>
+        </div>
+    </div>
+
+    <div class="col-md-8 col-md-pull-4" >
+        <img src="../static/img/hn.jpg">
+
+    </div>
+
+</div>
+
+</div>
+</body>
+</html>

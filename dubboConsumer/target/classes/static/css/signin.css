@@ -1,0 +1,74 @@
+body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #eee;
+    background: url("../img/dy1.png")no-repeat;
+    background-size:100%;
+    background-color:#f1f1f1 ;
+}
+
+.form-signin {
+
+
+    max-width: 330px;//定义元素的最大宽度。
+    padding: 0px;//内部填充
+    margin: 0 auto;
+
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;//设置外边距
+}
+.form-signin .checkbox {
+    font-weight: normal;
+}
+.form-signin .form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="text"] {
+    background: url(../img/user.png) no-repeat;
+    background-color: white;
+    background-position: 3px ;
+    padding-left: 30px;
+    background-size: 8%;
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;/*添加圆角*/
+    border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+    background: url(../img/password1.png) no-repeat;
+    background-color: white;
+    background-position: 3px ;
+    padding-left: 30px;
+    background-size: 8%;
+    margin-bottom: 0px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+#login {
+    position: relative;
+    width: 480px;
+    height: 500px;
+    background-color: #FFFFFF;
+    border-radius:3px;
+    box-shadow: 10px 10px 5px #888888;/*添加阴影*/
+    padding-top:50px;
+    padding-bottom:50px;
+    padding-right:60px;
+    padding-left:80px;
+}
+.form-signin input[name="passWord2"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
